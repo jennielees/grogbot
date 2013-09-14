@@ -11,6 +11,7 @@ require(["jquery", pv + "dropdown.js", pv + "prettify.js", pl + 'Noduino.js', pl
   var Noduino = null,
       motor = null,
       button = null,
+      thisBoard = null,
       createMotor = function(board) {
         $('#interval-slide').change(function(e){
           var speed = this.value;
@@ -26,17 +27,24 @@ require(["jquery", pv + "dropdown.js", pv + "prettify.js", pl + 'Noduino.js', pl
       };
 
   var connectButton = function(board) {
+    console.log("Button connected");
     board.withButton({pin: 13}, function(err, Button) {
-
       if (err) { return console.log(err); }
-
       Button.on('push', function() {
         console.log('Button pushed');
       });
-
-      Button.push();
+//      Button.push();
     });
+  };
 
+
+  var fireDrink = function(board) {
+    console.log("Listening");
+    // Setting up the listener for making drinks
+    $('#makedrink').click(function(e) {
+      console.log("Making drink");
+      makeDrink(board);
+    });
   };
 
   var makeDrink = function(board) {
@@ -53,15 +61,21 @@ require(["jquery", pv + "dropdown.js", pv + "prettify.js", pl + 'Noduino.js', pl
 
       if (!Noduino || !Noduino.connected) {
         // Connect to Arduino
+      console.log("Connecting");
         Noduino = new NoduinoObj({debug: true, host: 'http://localhost:8090', logger: {container: '#connection-log'}}, Connector, Logger);
         Noduino.connect(function(err, board) {
           $('#connection-status .alert').addClass('hide');
           if (err) {
             $('#connection-status .alert-error').removeClass('hide'); }
           else {
-            $('#connection-status .alert-success').removeClass('hide'); connectButton(board); }
+            $('#connection-status .alert-success').removeClass('hide');
+            // UNTESTED listeners - need an Arduino to test.
+            connectButton(board);
+            fireDrink(board);
+          }// end else
         });
       }
     });
+
   });
 });

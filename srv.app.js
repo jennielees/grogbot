@@ -33,10 +33,17 @@ define(['kickstart', 'module', 'path', 'fs'], function (kickstart, module, path,
   });
 
   /** 
-   * Catch request for Grog page
+   * Catch request for Grog debug page
+   */
+  srv.all('/grogbot-debug.html', function(req, res) {
+    res.render('grogbot-debug', {jsApp: 'none', active: 'grogbot-debug', title: 'noduino', 'examples': examples});
+  });
+
+  /** 
+   * Catch request for Grog main page
    */
   srv.all('/grogbot.html', function(req, res) {
-    res.render('grogbot', {jsApp: 'none', active: 'grogbot', title: 'noduino', 'examples': examples});
+    res.render('grogbot-mobile', {layout: false, jsApp: 'none', active: 'grogbot', title: 'noduino', 'examples': examples});
   });
 
   /** 
